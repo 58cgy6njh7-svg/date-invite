@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>A Question For You ❤️</title>
+  <link rel="stylesheet" href="styles.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+</head>
+<body>
+
+  <!-- =============================================
+       CONFETTI CANVAS (full-screen overlay)
+  ============================================= -->
+  <canvas id="confetti-canvas"></canvas>
+
+  <!-- =============================================
+       SCREEN 1 — The Question
+  ============================================= -->
+  <section id="screen-1" class="screen active">
+    <div class="screen-inner center-content">
+      <h1 class="headline" id="main-question">Will you go on a<br>date with me?</h1>
+      <div class="button-group">
+        <button id="btn-yes" class="btn btn-yes" onclick="handleYes()">
+          Yes &nbsp;❤️
+        </button>
+        <button id="btn-no" class="btn btn-no" onclick="handleNo()">
+          No
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- =============================================
+       SCREEN 2 — Activity Selection
+  ============================================= -->
+  <section id="screen-2" class="screen">
+    <div class="screen-inner">
+      <div class="screen-header center-content">
+        <h2 class="headline">Yohoooo you said YES!!! ❤️</h2>
+        <p class="subheading">What would you like to do?</p>
+      </div>
+
+      <!-- ── Cards ── -->
+      <!-- To add/edit options: change the data-* attributes and inner text -->
+      <div class="cards-grid">
+
+        <div class="card" data-option="Dinner at Home + Chill" onclick="selectActivity(this)">
+          <div class="card-emoji">🍝</div>
+          <!-- Replace src below with your own image -->
+          <div class="card-image">
+            <img src="assets/option-1.jpg" alt="Dinner at home" onerror="this.parentElement.classList.add('img-placeholder')" />
+          </div>
+          <div class="card-text">
+            <h3>Dinner at Home + Chill</h3>
+          </div>
+        </div>
+
+        <div class="card" data-option="Play Tennis + Dinner" onclick="selectActivity(this)">
+          <div class="card-emoji">🎾</div>
+          <div class="card-image">
+            <img src="assets/option-2.jpg" alt="Tennis" onerror="this.parentElement.classList.add('img-placeholder')" />
+          </div>
+          <div class="card-text">
+            <h3>Play Tennis + Dinner</h3>
+          </div>
+        </div>
+
+        <div class="card" data-option="Bike Ride + Wine with a View" onclick="selectActivity(this)">
+          <div class="card-emoji">🚲🍷</div>
+          <div class="card-image">
+            <img src="assets/option-3.jpg" alt="Bike ride" onerror="this.parentElement.classList.add('img-placeholder')" />
+          </div>
+          <div class="card-text">
+            <h3>Bike Ride + Wine with a View</h3>
+          </div>
+        </div>
+
+        <div class="card" data-option="Dinner + Walk in the Park" onclick="selectActivity(this)">
+          <div class="card-emoji">🌳✨</div>
+          <div class="card-image">
+            <img src="assets/option-4.jpg" alt="Park walk" onerror="this.parentElement.classList.add('img-placeholder')" />
+          </div>
+          <div class="card-text">
+            <h3>Dinner + Walk in the Park</h3>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- =============================================
+       SCREEN 3 — Calendar / Time Picker
+  ============================================= -->
+  <section id="screen-3" class="screen">
+    <div class="screen-inner center-content">
+      <div class="screen-header">
+        <h2 class="headline">Perfect ❤️</h2>
+        <p class="subheading">Now let's find a time.</p>
+      </div>
+
+      <div class="calendar-container">
+        <!-- Month navigation -->
+        <div class="cal-nav">
+          <button class="cal-arrow" id="cal-prev" onclick="changeMonth(-1)">&#8592;</button>
+          <span class="cal-month-label" id="cal-month-label"></span>
+          <button class="cal-arrow" id="cal-next" onclick="changeMonth(1)">&#8594;</button>
+        </div>
+
+        <!-- Day-of-week headers -->
+        <div class="cal-weekdays">
+          <span>Sun</span><span>Mon</span><span>Tue</span>
+          <span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span>
+        </div>
+
+        <!-- Day cells — filled by JS -->
+        <div class="cal-grid" id="cal-grid"></div>
+
+        <!-- Time slots — appear after day selection -->
+        <div class="time-slots-wrapper" id="time-slots-wrapper">
+          <p class="time-slots-label">Choose a time</p>
+          <div class="time-slots" id="time-slots"></div>
+        </div>
+
+        <!-- Google Calendar status indicator -->
+        <div class="gcal-status" id="gcal-status"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =============================================
+       SCREEN 4 — Confirmation
+  ============================================= -->
+  <section id="screen-4" class="screen">
+    <div class="screen-inner center-content">
+
+      <!-- ── REPLACE IMAGE ──────────────────────────────
+           Put your photo at: assets/final-photo.jpg
+           The path is set in SETTINGS.finalImage in script.js
+      ─────────────────────────────────────────────── -->
+      <div class="final-image-wrap">
+        <img id="final-photo" src="assets/final-photo.jpg" alt="Looking forward to it"
+             onerror="this.parentElement.classList.add('img-placeholder')" />
+      </div>
+
+      <h2 class="headline final-headline">Can't wait ❤️</h2>
+      <p class="subheading">See you soon, Maxik! luv ❤️</p>
+
+      <div class="summary-card">
+        <div class="summary-row">
+          <span class="summary-label">Date</span>
+          <span class="summary-value" id="summary-date">—</span>
+        </div>
+        <div class="summary-row">
+          <span class="summary-label">Time</span>
+          <span class="summary-value" id="summary-time">—</span>
+        </div>
+        <div class="summary-row">
+          <span class="summary-label">Activity</span>
+          <span class="summary-value" id="summary-activity">—</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <script src="script.js"></script>
+</body>
+</html>
